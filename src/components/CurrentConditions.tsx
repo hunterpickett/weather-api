@@ -6,16 +6,22 @@ interface ICurrentConditionProps {
     date: string;
     text: string;
     temp: string;
+    locationName: string;
   };
 }
 
 export const CurrentConditions: SFC<ICurrentConditionProps> = props => {
-  const { date, text, temp } = props.info;
+  const { date, text, temp, locationName } = props.info;
   return (
     <div>
-      <h1>{date}</h1>
-      <h1>{text}</h1>
-      <h1>{temp}</h1>
+      {locationName !== '' && (
+        <div>
+          <h2>Current Weather Conditions for {locationName}</h2>
+          <h1>{date}</h1>
+          <h1>{text}</h1>
+          <h1>{temp}</h1>
+        </div>
+      )}
     </div>
   );
 };
