@@ -8,17 +8,13 @@ interface TenDayForecastProps {
 }
 
 export const TenDayForecast: SFC<TenDayForecastProps> = props => {
+  if (props.forecasts.length === 0) return null;
   return (
-    <div>
-      {props.forecasts !== [] && (
-        <div>
-          <p>10 Day Forecast</p>
-          {props.forecasts !== [] &&
-            props.forecasts.map(f => {
-              return <SingleForecast key={f.date} forecast={f} />;
-            })}
-        </div>
-      )}
-    </div>
+    <>
+      <p>10 Day Forecast</p>
+      {props.forecasts.map(f => {
+        return <SingleForecast key={f.date} forecast={f} />;
+      })}
+    </>
   );
 };

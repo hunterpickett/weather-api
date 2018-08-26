@@ -6,11 +6,10 @@ interface IForecastProps {
   forecast: Forecast;
 }
 export const SingleForecast: SFC<IForecastProps> = props => {
-  const { text, code, high, low } = props.forecast;
+  const { text, high, low } = props.forecast;
   return (
     <>
       <h1>{text}</h1>
-      <h1>{code}</h1>
       <h1>
         High: {high}
         °F

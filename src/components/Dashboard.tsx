@@ -1,13 +1,4 @@
-//search = () => {
-//  const response = getWeatherResponse();
-//  if (!response.success){
-//    return handleWeatherErrors(response);
-//  }
-//  handleWeatherSuccess(response);
-// }
-
 import * as React from 'react';
-
 import { Component, FormEvent } from 'react';
 import { getWeather } from '../services/yahoo-weather';
 import { CurrentConditions } from './CurrentConditions';
@@ -17,15 +8,12 @@ import { Forecast } from '../models/Forecast';
 interface IDashboardProps {}
 
 interface IDashboardState {
-  city: string;
-  country: string;
   date: string;
   error: {
     timedOut: boolean;
     noResults: boolean;
   };
   forecasts: Forecast[];
-  region: string;
   text: string;
   temp: string;
   locationName: string;
@@ -33,8 +21,6 @@ interface IDashboardState {
 }
 
 const defaultState = {
-  city: '',
-  country: '',
   date: '',
   error: {
     timedOut: false,
@@ -42,7 +28,6 @@ const defaultState = {
   },
   forecasts: [],
   locationName: '',
-  region: '',
   searchTerm: '',
   temp: '',
   text: ''
@@ -80,9 +65,7 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
       date,
       temp,
       text,
-      city,
-      country,
-      region,
+      locationName: `${city}, ${region}, ${country}`,
       forecasts
     };
   }
@@ -120,19 +103,18 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
 
   public handleWeatherError(res: any) {
     this.setState({
+      ...defaultState,
       error: { timedOut: res.timedOut, noResults: res.noResults }
     });
   }
 
   public handleWeatherSuccess(res: any) {
-    const { date, temp, text, city, country, region, forecasts } = res.results;
+    const { date, temp, text, forecasts, locationName } = res.results;
     this.setState({
       date,
+      locationName,
       temp,
       text,
-      city,
-      country,
-      region,
       forecasts
     });
   }
@@ -149,12 +131,8 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
     this.setState(() => ({ searchTerm }));
   };
 
-  public onSubmit = (e: FormEvent<HTMLInputElement>) => {
+  public onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    this.search();
-  };
-
-  public refresh = () => {
     this.search();
   };
 
@@ -163,16 +141,15 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
     return (
       <div>
         <h1>Weather Api</h1>
-        <form>
+        <form onSubmit={this.onSubmit}>
           <input
-            onSubmit={this.onSubmit}
             value={this.state.searchTerm}
             onChange={this.onSearchTermChanged}
             placeholder="Choose a City"
           />
         </form>
         <button onClick={this.search}>Search</button>
-        <button onClick={this.refresh}>Refresh</button>
+        <button onClick={this.search}>Refresh</button>
         {this.renderError()}
         <CurrentConditions info={{ date, temp, text, locationName }} />
         <TenDayForecast forecasts={this.state.forecasts} />
