@@ -1,11 +1,21 @@
 import * as React from 'react';
 import { Component, FormEvent } from 'react';
+import Button from '@material-ui/core/Button';
 import { getWeather } from '../services/yahoo-weather';
-import { CurrentConditions } from './CurrentConditions';
-import { TenDayForecast } from './TenDayForecast';
+import CurrentConditions from './CurrentConditions';
+import TenDayForecast from './TenDayForecast';
 import { Forecast } from '../models/Forecast';
+import { Input, CircularProgress, Grid, withStyles } from '@material-ui/core';
 
-interface IDashboardProps {}
+const styles = {
+  spinner: {
+    marginTop: 150
+  }
+};
+
+interface IDashboardProps {
+  classes: any;
+}
 
 interface IDashboardState {
   date: string;
@@ -17,6 +27,7 @@ interface IDashboardState {
   text: string;
   temp: string;
   locationName: string;
+  isSearching: boolean;
   searchTerm: string;
 }
 
@@ -27,8 +38,9 @@ const defaultState = {
     noResults: false
   },
   forecasts: [],
+  isSearching: false,
   locationName: '',
-  searchTerm: '',
+  searchTerm: 'tokyo',
   temp: '',
   text: ''
 };
@@ -40,7 +52,9 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
       ...defaultState
     };
   }
-  public componentDidMount() {}
+  public componentDidMount() {
+    this.search();
+  }
 
   public setTimeoutPromise(timeout: number) {
     return new Promise(resolve => setTimeout(() => resolve(), timeout));
@@ -70,8 +84,19 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
     };
   }
 
+  public setSearchingStatus(status: boolean) {
+    this.setState({ isSearching: status });
+  }
+
+  public resetErrors() {
+    this.setState({ error: { timedOut: false, noResults: false } });
+  }
+
   search = async () => {
+    this.resetErrors();
+    this.setSearchingStatus(true);
     const response = await this.getWeatherResponse();
+    this.setSearchingStatus(false);
     if (!response.success) {
       this.handleWeatherError(response);
       return;
@@ -136,25 +161,50 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
     this.search();
   };
 
+  public renderWeatherInfo({
+    date,
+    temp,
+    text,
+    locationName
+  }: IDashboardState) {
+    if (this.state.isSearching)
+      return (
+        <Grid container className={this.props.classes.spinner} justify="center">
+          <CircularProgress size={100} />
+        </Grid>
+      );
+    return (
+      <>
+        <CurrentConditions info={{ date, temp, text, locationName }} />
+        <TenDayForecast
+          isSearching={this.state.isSearching}
+          forecasts={this.state.forecasts}
+        />
+      </>
+    );
+  }
+
   public render() {
-    const { date, temp, text, locationName } = this.state;
     return (
       <div>
         <h1>Weather Api</h1>
         <form onSubmit={this.onSubmit}>
-          <input
+          <Input
             value={this.state.searchTerm}
-            onChange={this.onSearchTermChanged}
+            onChange={this.onSearchTermChanged as any}
             placeholder="Choose a City"
           />
         </form>
-        <button onClick={this.search}>Search</button>
-        <button onClick={this.search}>Refresh</button>
+        <Button variant="outlined" color="primary" onClick={this.search}>
+          Search
+        </Button>
+        <Button variant="outlined" color="primary" onClick={this.search}>
+          Refresh
+        </Button>
         {this.renderError()}
-        <CurrentConditions info={{ date, temp, text, locationName }} />
-        <TenDayForecast forecasts={this.state.forecasts} />
+        {this.renderWeatherInfo(this.state)}
       </div>
     );
   }
 }
-export default Dashboard;
+export default withStyles(styles)(Dashboard);
