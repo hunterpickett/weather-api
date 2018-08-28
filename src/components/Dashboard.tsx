@@ -18,7 +18,7 @@ interface IDashboardProps {
 }
 
 interface IDashboardState {
-  date: string;
+  day: string;
   error: {
     timedOut: boolean;
     noResults: boolean;
@@ -32,7 +32,7 @@ interface IDashboardState {
 }
 
 const defaultState = {
-  date: '',
+  day: '',
   error: {
     timedOut: false,
     noResults: false
@@ -61,11 +61,10 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
   }
 
   public dataShaper(res: any) {
-    const {
-      date,
-      temp,
-      text
-    } = res.data.query.results.channel[0].item.condition;
+    console.log(res);
+    const { temp, text } = res.data.query.results.channel[0].item.condition;
+    const { day } = res.data.query.results.channel[0].item.forecast.day;
+    console.log(day);
     const {
       city,
       country,
@@ -76,7 +75,7 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
       forecasts.push(c.item.forecast);
     });
     return {
-      date,
+      day,
       temp,
       text,
       locationName: `${city}, ${region}, ${country}`,
@@ -92,7 +91,7 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
     this.setState({ error: { timedOut: false, noResults: false } });
   }
 
-  search = async () => {
+  public search = async () => {
     this.resetErrors();
     this.setSearchingStatus(true);
     const response = await this.getWeatherResponse();
@@ -134,9 +133,9 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
   }
 
   public handleWeatherSuccess(res: any) {
-    const { date, temp, text, forecasts, locationName } = res.results;
+    const { day, temp, text, forecasts, locationName } = res.results;
     this.setState({
-      date,
+      day,
       locationName,
       temp,
       text,
@@ -161,12 +160,7 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
     this.search();
   };
 
-  public renderWeatherInfo({
-    date,
-    temp,
-    text,
-    locationName
-  }: IDashboardState) {
+  public renderWeatherInfo({ day, temp, text, locationName }: IDashboardState) {
     if (this.state.isSearching)
       return (
         <Grid container className={this.props.classes.spinner} justify="center">
@@ -175,7 +169,7 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
       );
     return (
       <>
-        <CurrentConditions info={{ date, temp, text, locationName }} />
+        <CurrentConditions info={{ day, temp, text, locationName }} />
         <TenDayForecast
           isSearching={this.state.isSearching}
           forecasts={this.state.forecasts}

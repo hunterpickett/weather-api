@@ -12,7 +12,7 @@ const styles = {
 
 interface ICurrentConditionProps {
   info: {
-    date: string;
+    day: string;
     text: string;
     temp: string;
     locationName: string;
@@ -22,7 +22,7 @@ interface ICurrentConditionProps {
 
 const CurrentConditions: SFC<ICurrentConditionProps> = props => {
   if (!props.info.locationName) return null;
-  const { date, text, temp, locationName } = props.info;
+  const { day, text, temp, locationName } = props.info;
   const { classes } = props;
   return (
     <div>
@@ -30,7 +30,7 @@ const CurrentConditions: SFC<ICurrentConditionProps> = props => {
         <Typography variant="headline" component="h2">
           Current Weather Conditions for {locationName}
         </Typography>
-        <Typography variant="body1">{date}</Typography>
+        <Typography variant="body1">{day}</Typography>
         <Typography variant="body1">{text}</Typography>
         <Typography variant="body1">{temp}</Typography>
       </Paper>

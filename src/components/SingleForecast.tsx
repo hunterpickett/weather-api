@@ -3,23 +3,35 @@ import { SFC } from 'react';
 import { Forecast } from '../models/Forecast';
 import { Card, CardContent, Typography, withStyles } from '@material-ui/core';
 import { Grid } from '@material-ui/core';
+
 const sunny = require('../assets/weather/weather-clear.png');
 const styles = {
   MuiCard: {
-    width: 260,
+    '&:last-child': {
+      paddingBottom: 0
+    },
+    maxWidth: 320,
     padding: 0,
     paddingBottom: 0
   },
   day: {
     color: '#3f51b5',
-    fontSize: 18
+    fontSize: 22,
+    fontWeight: 500,
+    textAlign: 'left' as 'left' //stupid
+  },
+  subScript: {
+    fontSize: 11,
+    color: 'white'
   },
   purpleSide: {
     backgroundColor: '#3f51b5',
-    height: '100%',
+    height: '100%'
   },
-  whiteText: {
-    color: 'white'
+  rightColumnText: {
+    color: 'white',
+    fontSize: 22,
+    fontWeight: 500
   },
   temp: {
     fontSize: 26
@@ -27,13 +39,17 @@ const styles = {
   img: {
     height: 90,
     width: 90
+  },
+  leftColumn: {
+    padding: 20,
+    paddingTop: 5
   }
 };
 
 interface IForecastProps {
   forecast: Forecast;
-  className?: any;
   classes: any;
+  info?: any;
 }
 
 interface LeftColumnProps {
@@ -47,37 +63,42 @@ interface RightColumnProps {
 
 const RightColumn: SFC<RightColumnProps> = props => (
   <div className={props.classes.purpleSide}>
-    <Grid container className={props.classes.purpleSide} justify="space-around" direction="column">
-      <Typography className={props.classes.whiteText}> 0%</Typography>
-      <Typography className={props.classes.whiteText}> 46%</Typography>
-      <Typography className={props.classes.whiteText}> km/h</Typography>
+    <Grid
+      container
+      className={props.classes.purpleSide}
+      justify="space-around"
+      direction="column"
+    >
+      <Typography className={props.classes.rightColumnText}> 0%</Typography>
+      <Typography className={props.classes.rightColumnText}> 46%</Typography>
+      <Typography className={props.classes.rightColumnText}>
+        6 <span className={props.classes.subScript}>km/h</span>
+      </Typography>
     </Grid>
   </div>
 );
 
 const LeftColumn: SFC<LeftColumnProps> = props => {
-  const { high, low } = props.forecast;
+  const { day, high, low } = props.forecast;
+  const { classes } = props;
   return (
-    <>
-    <Grid item >
-      <Typography className={props.classes.day} >
-        {/* {date} */}
-        Monday
-      </Typography>
-    </Grid>
-    <Grid container alignItems="center" >
-      <Grid item lg={6}>
-        <img className={props.classes.img} src={sunny} />
+    <div className={classes.leftColumn}>
+      <Grid item>
+        <Typography className={props.classes.day}>{day}</Typography>
       </Grid>
-      <Grid item lg={6}>
-        <Typography className={props.classes.temp}>
-          {high} °F
-        <br />
-          {low} °F
-      </Typography>
+      <Grid container alignItems="center">
+        <Grid item lg={6}>
+          <img className={props.classes.img} src={sunny} />
+        </Grid>
+        <Grid item lg={6}>
+          <Typography className={props.classes.temp}>
+            {high} °F
+            <br />
+            {low} °F
+          </Typography>
+        </Grid>
       </Grid>
-    </Grid>
-    </>
+    </div>
   );
 };
 

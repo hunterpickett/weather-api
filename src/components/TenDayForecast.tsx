@@ -23,27 +23,26 @@ interface TenDayForecastProps {
 
 const TenDayForecast: SFC<TenDayForecastProps> = props => {
   if (props.forecasts.length === 0) return null;
-  const { classes } = props;
   return (
     <>
-    <Typography color="secondary" variant="title">
-      10 Day Forecast
+      <Typography color="secondary" variant="title">
+        10 Day Forecast
       </Typography>
-    <Grid container spacing={16} justify="center">
-      {props.forecasts.map(f => {
-        return (
-          <Fade
-            timeout={{ enter: 750, exit: 75 }}
-            key={f.date}
-            in={!props.isSearching}
-          >
-            <Grid item lg={3}>
-              <SingleForecast className={classes.item} forecast={f} />
-            </Grid>
-          </Fade>
-        );
-      })}
-    </Grid>
+      <Grid container spacing={16} justify="space-around">
+        {props.forecasts.map(f => {
+          return (
+            <Fade
+              timeout={{ enter: 750, exit: 75 }}
+              key={f.date}
+              in={!props.isSearching}
+            >
+              <Grid item lg={3}>
+                <SingleForecast forecast={f} />
+              </Grid>
+            </Fade>
+          );
+        })}
+      </Grid>
     </>
   );
 };
