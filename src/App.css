@@ -1,6 +1,5 @@
 .App {
   text-align: center;
-  font-family: 'Roboto', sans-serif;
 }
 
 .App-logo {
@@ -24,10 +23,6 @@
 }
 
 @keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
