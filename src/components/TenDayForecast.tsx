@@ -2,7 +2,8 @@ import * as React from 'react';
 import { SFC } from 'react';
 import { Forecast } from '../models/Forecast';
 import SingleForecast from './SingleForecast';
-import { withStyles, Typography, Grid, Fade } from '@material-ui/core';
+import { withStyles, Typography } from '@material-ui/core';
+import './TenDayForecast.css';
 
 const styles = {
   container: {
@@ -25,24 +26,16 @@ const TenDayForecast: SFC<TenDayForecastProps> = props => {
   if (props.forecasts.length === 0) return null;
   return (
     <>
-      <Typography color="secondary" variant="title">
-        10 Day Forecast
+    <Typography color="secondary" variant="title">
+      10 Day Forecast
       </Typography>
-      <Grid container spacing={16} justify="space-around">
-        {props.forecasts.map(f => {
-          return (
-            <Fade
-              timeout={{ enter: 750, exit: 75 }}
-              key={f.date}
-              in={!props.isSearching}
-            >
-              <Grid item lg={3}>
-                <SingleForecast forecast={f} />
-              </Grid>
-            </Fade>
-          );
-        })}
-      </Grid>
+    <div className="grid-container">
+      {props.forecasts.map(f => {
+        return (
+          <SingleForecast forecast={f} />
+        );
+      })}
+    </div>
     </>
   );
 };

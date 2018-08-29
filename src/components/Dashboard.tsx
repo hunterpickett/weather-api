@@ -169,11 +169,11 @@ class Dashboard extends Component<IDashboardProps, IDashboardState> {
       );
     return (
       <>
-        <CurrentConditions info={{ day, temp, text, locationName }} />
-        <TenDayForecast
-          isSearching={this.state.isSearching}
-          forecasts={this.state.forecasts}
-        />
+      <CurrentConditions info={{ day, temp, text, locationName }} />
+      <TenDayForecast
+        isSearching={this.state.isSearching}
+        forecasts={this.state.forecasts}
+      />
       </>
     );
   }
