@@ -1,0 +1,38 @@
+.card {
+  max-width: 220px;
+  max-height: 150px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 3fr 2fr;
+  grid-template-rows: 1fr 2fr 2fr;
+  grid-template-areas:
+    ' day none'
+    ' icon highTemp'
+    ' icon lowTemp';
+}
+
+.day {
+  grid-area: day;
+  align-self: 'left';
+  justify-self: 'left';
+  color: '#3F51B5';
+  font-weight: 500;
+  font-size: 16px;
+}
+
+.icon {
+  max-height: 80px;
+  max-width: 80px;
+  grid-area: icon;
+  justify-self: 'center';
+}
+
+.highTemp {
+  grid-area: highTemp;
+}
+
+.lowTemp {
+  grid-area: lowTemp;
+}

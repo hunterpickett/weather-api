@@ -1,13 +1,15 @@
 import * as React from 'react';
+import SingleForecast from './SingleForecast';
+import { QueryResult } from '../models/QueryResult';
 interface ITenDayForecastProps {
-  forecasts: any;
+  results: QueryResult[];
 }
 
 const TenDayForecast: React.SFC<ITenDayForecastProps> = props => {
+  const query = props.results[0];
   return (
     <>
-      <h1>Ten Day Forecast</h1>
-      <h3>{props.forecasts[0].item.condition.text}</h3>
+      <SingleForecast query={query} />
     </>
   );
 };
