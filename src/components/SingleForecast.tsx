@@ -4,15 +4,10 @@ import './SingleForecast.css';
 import { QueryResult } from '../models/QueryResult';
 
 const styles = {
-  card: {
-    maxWidth: '220px',
-    maxHeight: '150px'
-  },
-
   contentGrid: {
     display: 'grid',
     gridTemplateColumns: '3fr 2fr',
-    gridTemplateRows: '1fr 2fr 2fr',
+    gridTemplateRows: '2fr 3fr 3fr',
     gridTemplateAreas: `
     ' day none'
     ' icon highTemp'
@@ -21,26 +16,29 @@ const styles = {
 
   day: {
     gridArea: 'day',
-    alignSelf: 'left',
-    justifySelf: 'left',
     color: '#3F51B5',
     fontWeight: 500,
-    fontSize: '16px'
+    fontSize: '22px'
   },
 
   icon: {
-    maxHeight: '80px',
-    maxWidth: '80px',
+    maxHeight: '90px',
+    maxWidth: '90px',
     gridArea: 'icon',
-    justifySelf: 'center'
+    justifySelf: 'center',
+    alignSelf: 'center'
   },
 
   highTemp: {
-    gridArea: 'highTemp'
+    gridArea: 'highTemp',
+    alignSelf: 'center',
+    fontSize: '26px'
   },
 
   lowTemp: {
-    gridArea: 'lowTemp'
+    gridArea: 'lowTemp',
+    alignSelf: 'center',
+    fontSize: '26px'
   }
 };
 
@@ -55,16 +53,16 @@ const SingleForecast: React.SFC<ISingleForecastProps> = props => {
   const { day, high, low } = props.query.item.forecast;
   const { classes } = props;
   return (
-    <div className="card">
-      <Card>
-        <CardContent className="content-grid">
-          <Typography className={classes.day}>{day}</Typography>
-          <img className={classes.logo} src={sunny} />
-          <Typography className={classes.highTemp}>{high}</Typography>
-          <Typography className={classes.lowTemp}>{low}</Typography>
-        </CardContent>
-      </Card>
-    </div>
+    <Card>
+      <CardContent className="content-grid">
+        <Typography align="left" className={classes.day}>
+          {day}
+        </Typography>
+        <img className={classes.icon} src={sunny} />
+        <Typography className={classes.highTemp}>{high} °F</Typography>
+        <Typography className={classes.lowTemp}>{low} °F</Typography>
+      </CardContent>
+    </Card>
   );
 };
 

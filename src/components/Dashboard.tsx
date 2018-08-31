@@ -1,6 +1,7 @@
 import * as React from 'react';
 import getWeather from '../services/yahoo-weather';
 import TenDayForecast from './TenDayForecast';
+import CurrentConditions from './CurrentConditions';
 import { Input, Button } from '@material-ui/core';
 
 interface IDashboardProps {}
@@ -91,22 +92,47 @@ class Dashboard extends React.Component<IDashboardProps, IDashboardState> {
     });
   }
 
+  public onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    this.search();
+  };
+
   public renderTenDayForecast() {
     if (!this.state.data) return null;
+    if (this.state.error) return this.renderError();
     return <TenDayForecast results={this.state.data.channel} />;
+  }
+
+  public renderCurrentConditions() {
+    if (!this.state.data) return null;
+    if (this.state.error) return this.renderError();
+    return (
+      <>
+        <CurrentConditions result={this.state.data.channel[0]} />
+      </>
+    );
+  }
+
+  public renderError() {
+    return <h1> Shit Broke </h1>;
   }
 
   render() {
     return (
       <>
-        <h1> Weather Api</h1>
-        <Input
-          placeholder="Enter a city"
-          value={this.state.searchQuery}
-          onChange={this.onSearchQueryChanged}
-        />
-        <Button onClick={this.search}>Search</Button>
-        {this.renderTenDayForecast()}
+        <div style={{ padding: 50 }}>
+          <h1> Weather Api</h1>
+          <form onSubmit={this.onSubmit}>
+            <Input
+              placeholder="Enter a city"
+              value={this.state.searchQuery}
+              onChange={this.onSearchQueryChanged}
+            />
+            <Button onClick={this.search}>Search</Button>
+          </form>
+          {this.renderCurrentConditions()}
+          {this.renderTenDayForecast()}
+        </div>
       </>
     );
   }
