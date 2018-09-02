@@ -3,21 +3,41 @@ import { Card, CardContent, Typography, withStyles } from '@material-ui/core';
 import { QueryResult } from '../models/QueryResult';
 
 const styles = {
-  cardGrid: {
+  MuiCardContent: {
+    padding: 0,
     display: 'grid',
-    gridTemplateColumn: '2fr 1fr'
+    gridTemplateColumns: '2fr 1fr',
+    '&:last-child': {
+      paddingBottom: 0
+    }
+  },
+  mainGrid: {
+    display: 'grid',
+    justifyContent: 'center'
+  },
+  card: {
+    maxWidth: '300px',
+    marginBottom: '50px'
   },
   leftContentGrid: {
-    // display: 'grid',
-    // gridTemplateColumns: '3fr 2fr',
-    // gridTemplateRows: '2fr 3fr 3fr',
-    // gridTemplateAreas: `
-    // ' day none'
-    // ' icon highTemp'
-    // ' icon lowTemp'`
+    display: 'grid',
+    padding: 20,
+    gridTemplateColumns: '3fr 2fr',
+    gridTemplateRows: '2fr 3fr 3fr',
+    gridTemplateAreas: `
+    ' day none'
+    ' icon highTemp'
+    ' icon lowTemp'`
   },
-  rightContentGrid: {},
-
+  rightContentGrid: {
+    display: 'grid',
+    backgroundColor: '#3F51B5',
+    gridTemplateRows: 'repeat(3, 1fr)',
+    alignItems: 'center'
+  },
+  rightText: {
+    color: 'white'
+  },
   day: {
     gridArea: 'day',
     color: '#3F51B5',
@@ -59,8 +79,9 @@ interface ILeftColumnProps {
 const sunny = require('../assets/weather/weather-clear.png');
 
 const LeftColumn: React.SFC<ILeftColumnProps> = props => {
+  const { classes } = props;
   return (
-    <>
+    <div className={classes.leftContentGrid}>
       <Typography align="left" className={props.classes.day}>
         {props.day}
       </Typography>
@@ -69,16 +90,23 @@ const LeftColumn: React.SFC<ILeftColumnProps> = props => {
         {props.high} °F
       </Typography>
       <Typography className={props.classes.lowTemp}>{props.low} °F</Typography>
-    </>
+    </div>
   );
 };
 
-interface IRightColumnProps {}
+interface IRightColumnProps {
+  classes: any;
+}
 
 const RightColumn: React.SFC<IRightColumnProps> = props => {
+  const { classes } = props;
   return (
     <>
-      <h1>Hello I'm the Right Column</h1>
+      <div className={classes.rightContentGrid}>
+        <Typography className={classes.rightText}>50%</Typography>
+        <Typography className={classes.rightText}>50%</Typography>
+        <Typography className={classes.rightText}>50%</Typography>
+      </div>
     </>
   );
 };
@@ -88,15 +116,12 @@ const CurrentConditions = (props: ICurrentConditionsProps) => {
   const { day, high, low } = props.result.item.forecast;
   // const { windSpeed } = props.result.wind.speed;
   return (
-    <div>
-      <Card>
-        <CardContent className={classes.cardGrid}>
-          <div className={classes.leftContentGrid}>
-            <LeftColumn day={day} high={high} low={low} classes={classes} />
-          </div>
-          <div className={classes.rightContentGrid}>
-            <RightColumn />
-          </div>
+    <div className={classes.mainGrid}>
+      <h1>Current Conditions</h1>
+      <Card className={classes.card}>
+        <CardContent className={classes.MuiCardContent}>
+          <LeftColumn day={day} high={high} low={low} classes={classes} />
+          <RightColumn classes={classes} />
         </CardContent>
       </Card>
     </div>
