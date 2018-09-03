@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Card, CardContent, Typography, withStyles } from '@material-ui/core';
 import { QueryResult } from '../models/QueryResult';
+import getIcon from '../services/code-to-icon';
 
 const styles = {
   MuiCardContent: {
@@ -16,7 +17,7 @@ const styles = {
     justifyContent: 'center'
   },
   card: {
-    maxWidth: '300px',
+    maxWidth: '350px',
     marginBottom: '50px'
   },
   leftContentGrid: {
@@ -27,21 +28,34 @@ const styles = {
     gridTemplateAreas: `
     ' day none'
     ' icon highTemp'
-    ' icon lowTemp'`
+    ' icon lowTemp'
+    ' area area'`
   },
   rightContentGrid: {
     display: 'grid',
     backgroundColor: '#3F51B5',
-    gridTemplateRows: 'repeat(3, 1fr)',
+    gridTemplateRows: 'repeat(2, 1fr)',
     alignItems: 'center'
   },
+  rightColumnEntry: {
+    display: 'grid',
+    alignItems: 'center',
+    gridTemplateColumns: 'repeat(2, 1fr)',
+    padding: 5
+  },
   rightText: {
-    color: 'white'
+    color: 'white',
+    fontSize: '20px',
+    fontWeight: 600
+  },
+  area: {
+    color: '#b6b6b6',
+    gridArea: 'area'
   },
   day: {
     gridArea: 'day',
     color: '#3F51B5',
-    fontWeight: 500,
+    fontWeight: 700,
     fontSize: '22px'
   },
 
@@ -75,8 +89,12 @@ interface ILeftColumnProps {
   high: string;
   low: string;
   day: string;
+  text: string;
+  fullLocation: string;
 }
-const sunny = require('../assets/weather/weather-clear.png');
+// const sunny = require('../assets/weather/weather-clear.png');
+const windy = require('../assets/weather/weather-wind.png');
+const rainy = require('../assets/weather/weather-rain-night.png');
 
 const LeftColumn: React.SFC<ILeftColumnProps> = props => {
   const { classes } = props;
@@ -85,17 +103,22 @@ const LeftColumn: React.SFC<ILeftColumnProps> = props => {
       <Typography align="left" className={props.classes.day}>
         {props.day}
       </Typography>
-      <img className={props.classes.icon} src={sunny} />
+      <img className={props.classes.icon} src={getIcon(props.text)} />
       <Typography className={props.classes.highTemp}>
         {props.high} °F
       </Typography>
       <Typography className={props.classes.lowTemp}>{props.low} °F</Typography>
+      <Typography className={props.classes.area}>
+        {props.fullLocation}
+      </Typography>
     </div>
   );
 };
 
 interface IRightColumnProps {
   classes: any;
+  windSpeed: string;
+  humidity: string;
 }
 
 const RightColumn: React.SFC<IRightColumnProps> = props => {
@@ -103,25 +126,59 @@ const RightColumn: React.SFC<IRightColumnProps> = props => {
   return (
     <>
       <div className={classes.rightContentGrid}>
-        <Typography className={classes.rightText}>50%</Typography>
-        <Typography className={classes.rightText}>50%</Typography>
-        <Typography className={classes.rightText}>50%</Typography>
+        <RightColumnEntry
+          value={`${props.humidity} %`}
+          icon={rainy}
+          classes={classes}
+        />
+        <RightColumnEntry
+          value={`${props.windSpeed} km/h`}
+          icon={windy}
+          classes={classes}
+        />
       </div>
     </>
+  );
+};
+interface IRightColumnEntryProps {
+  classes: any;
+  value: string;
+  icon: string;
+}
+const RightColumnEntry: React.SFC<IRightColumnEntryProps> = props => {
+  const { classes } = props;
+  return (
+    <div className={classes.rightColumnEntry}>
+      <img src={props.icon} style={{ height: '40px', width: '40px' }} />
+      <Typography className={classes.rightText}>{props.value}</Typography>
+    </div>
   );
 };
 
 const CurrentConditions = (props: ICurrentConditionsProps) => {
   const { classes } = props;
-  const { day, high, low } = props.result.item.forecast;
-  // const { windSpeed } = props.result.wind.speed;
+  const { day, high, low, text } = props.result.item.forecast;
+  const { city, country, region } = props.result.location;
+  const fullLocation = `${city}, ${region}, ${country}`;
+  const { speed } = props.result.wind;
+  const { humidity } = props.result.atmosphere;
   return (
     <div className={classes.mainGrid}>
-      <h1>Current Conditions</h1>
       <Card className={classes.card}>
         <CardContent className={classes.MuiCardContent}>
-          <LeftColumn day={day} high={high} low={low} classes={classes} />
-          <RightColumn classes={classes} />
+          <LeftColumn
+            text={text}
+            day={day}
+            high={high}
+            low={low}
+            fullLocation={fullLocation}
+            classes={classes}
+          />
+          <RightColumn
+            windSpeed={speed}
+            humidity={humidity}
+            classes={classes}
+          />
         </CardContent>
       </Card>
     </div>

@@ -25,4 +25,7 @@ export interface QueryResult {
     direction: string;
     speed: string;
   };
+  atmosphere: {
+    humidity: string;
+  };
 }

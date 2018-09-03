@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Card, CardContent, Typography, withStyles } from '@material-ui/core';
 import './SingleForecast.css';
 import { QueryResult } from '../models/QueryResult';
+import getIcon from '../services/code-to-icon';
 
 const styles = {
   contentGrid: {
@@ -17,7 +18,7 @@ const styles = {
   day: {
     gridArea: 'day',
     color: '#3F51B5',
-    fontWeight: 500,
+    fontWeight: 700,
     fontSize: '22px'
   },
 
@@ -42,7 +43,7 @@ const styles = {
   }
 };
 
-const sunny = require('../assets/weather/weather-clear.png');
+// const sunny = require('../assets/weather/weather-clear.png');
 
 export interface ISingleForecastProps {
   query: QueryResult;
@@ -50,7 +51,7 @@ export interface ISingleForecastProps {
 }
 
 const SingleForecast: React.SFC<ISingleForecastProps> = props => {
-  const { day, high, low } = props.query.item.forecast;
+  const { day, high, low, text } = props.query.item.forecast;
   const { classes } = props;
   return (
     <Card>
@@ -58,7 +59,7 @@ const SingleForecast: React.SFC<ISingleForecastProps> = props => {
         <Typography align="left" className={classes.day}>
           {day}
         </Typography>
-        <img className={classes.icon} src={sunny} />
+        <img className={classes.icon} src={getIcon(text)} />
         <Typography className={classes.highTemp}>{high} °F</Typography>
         <Typography className={classes.lowTemp}>{low} °F</Typography>
       </CardContent>
