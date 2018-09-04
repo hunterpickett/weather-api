@@ -2,7 +2,8 @@ import * as React from 'react';
 import getWeather from '../services/yahoo-weather';
 import TenDayForecast from './TenDayForecast';
 import CurrentConditions from './CurrentConditions';
-import { Input, Button } from '@material-ui/core';
+import { Button, Fade, TextField } from '@material-ui/core';
+import './Dashboard.css';
 
 interface IDashboardProps {}
 
@@ -41,6 +42,10 @@ class Dashboard extends React.Component<IDashboardProps, IDashboardState> {
   }
 
   public search = async () => {
+    if (!this.state.searchQuery) {
+      this.handleWeatherError({ noSearchTerm: true });
+      return;
+    }
     this.resetErrors();
     this.setSearchingStatus(true);
     const response: any = await this.getWeatherResponse();
@@ -86,9 +91,29 @@ class Dashboard extends React.Component<IDashboardProps, IDashboardState> {
     });
   }
 
+  public resetData() {
+    this.setState({ data: undefined });
+  }
+
   public handleWeatherError(results: any) {
+    this.resetData();
+    if (results.noSearchTerm) {
+      this.setState({ error: 'Please enter a search term' });
+      return;
+    }
+    if (results.timedOut) {
+      this.setState({
+        error:
+          'The Yahoo Weather API is taking a long time to respond, please try your request again later'
+      });
+      return;
+    }
+    if (results.noResults) {
+      this.setState({ error: 'Nothing was found matching that search term' });
+      return;
+    }
     this.setState({
-      error: 'There was an error'
+      error: 'An unknown error has occured, please try again at a later time.'
     });
   }
 
@@ -98,14 +123,14 @@ class Dashboard extends React.Component<IDashboardProps, IDashboardState> {
   };
 
   public renderTenDayForecast() {
-    if (!this.state.data) return null;
     if (this.state.error) return this.renderError();
+    if (!this.state.data) return null;
     return <TenDayForecast results={this.state.data.channel} />;
   }
 
   public renderCurrentConditions() {
+    if (this.state.error) return null;
     if (!this.state.data) return null;
-    if (this.state.error) return this.renderError();
     return (
       <>
         <CurrentConditions result={this.state.data.channel[0]} />
@@ -114,7 +139,21 @@ class Dashboard extends React.Component<IDashboardProps, IDashboardState> {
   }
 
   public renderError() {
-    return <h1> Shit Broke </h1>;
+    return <h1> {this.state.error} </h1>;
+  }
+
+  public renderSpinner() {
+    if (!this.state.isSearching) return null;
+    return (
+      <div className="atom-spinner">
+        <div className="spinner-inner">
+          <div className="spinner-line" />
+          <div className="spinner-line" />
+          <div className="spinner-line" />
+          <div className="spinner-circle">&#9679;</div>
+        </div>
+      </div>
+    );
   }
 
   render() {
@@ -123,15 +162,30 @@ class Dashboard extends React.Component<IDashboardProps, IDashboardState> {
         <div style={{ padding: 50 }}>
           <h1> Weather Api</h1>
           <form onSubmit={this.onSubmit}>
-            <Input
-              placeholder="Enter a city"
+            <TextField
+              label="Enter a city"
+              type="search"
               value={this.state.searchQuery}
               onChange={this.onSearchQueryChanged}
             />
             <Button onClick={this.search}>Search</Button>
           </form>
-          {this.renderCurrentConditions()}
-          {this.renderTenDayForecast()}
+          <br />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              marginTop: '50px'
+            }}
+          >
+            {this.renderSpinner()}
+          </div>
+          <Fade in={!this.state.isSearching} timeout={{ enter: 750, exit: 50 }}>
+            <div>
+              {this.renderCurrentConditions()}
+              {this.renderTenDayForecast()}
+            </div>
+          </Fade>
         </div>
       </>
     );
