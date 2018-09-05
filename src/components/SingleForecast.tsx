@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Card, CardContent, Typography, withStyles } from '@material-ui/core';
 import './SingleForecast.css';
-import { QueryResult } from '../models/QueryResult';
+import { Channel } from '../models/QueryResult';
 import getIcon from '../services/code-to-icon';
 
 const styles = {
@@ -46,7 +46,7 @@ const styles = {
 // const sunny = require('../assets/weather/weather-clear.png');
 
 export interface ISingleForecastProps {
-  query: QueryResult;
+  query: Channel;
   classes: any;
 }
 

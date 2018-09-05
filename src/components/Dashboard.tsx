@@ -16,7 +16,7 @@ interface IDashboardState {
 
 const defaultState = {
   data: undefined,
-  searchQuery: 'tokyo',
+  searchQuery: '',
   error: '',
   isSearching: false
 };
@@ -29,9 +29,6 @@ class Dashboard extends React.Component<IDashboardProps, IDashboardState> {
     };
   }
 
-  public componentDidMount() {
-    this.search();
-  }
   public onSearchQueryChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchQuery = e.currentTarget.value;
     this.setState({ searchQuery });

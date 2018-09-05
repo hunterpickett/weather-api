@@ -1,6 +1,6 @@
 import * as React from 'react';
 import SingleForecast from './SingleForecast';
-import { QueryResult } from '../models/QueryResult';
+import { Channel } from '../models/QueryResult';
 import { withStyles } from '@material-ui/core';
 
 const styles = {
@@ -17,7 +17,7 @@ const styles = {
 };
 
 interface ITenDayForecastProps {
-  results: QueryResult[];
+  results: Channel[];
   classes: any;
 }
 

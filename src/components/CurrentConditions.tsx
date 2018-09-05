@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Card, CardContent, Typography, withStyles } from '@material-ui/core';
-import { QueryResult } from '../models/QueryResult';
+import { Channel } from '../models/QueryResult';
 import getIcon from '../services/code-to-icon';
 
 const styles = {
@@ -80,7 +80,7 @@ const styles = {
   }
 };
 export interface ICurrentConditionsProps {
-  result: QueryResult;
+  result: Channel;
   classes: any;
 }
 
@@ -164,6 +164,7 @@ const CurrentConditions = (props: ICurrentConditionsProps) => {
   const { humidity } = props.result.atmosphere;
   return (
     <div className={classes.mainGrid}>
+      <Typography>Current Conditions</Typography>
       <Card className={classes.card}>
         <CardContent className={classes.MuiCardContent}>
           <LeftColumn
