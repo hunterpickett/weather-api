@@ -1,6 +1,7 @@
 import * as React from 'react';
 import getWeather from '../services/yahoo-weather';
 import TenDayForecast from './TenDayForecast';
+import SimpleAppBar from './SimpleAppBar';
 import CurrentConditions from './CurrentConditions';
 import { Button, Fade, TextField } from '@material-ui/core';
 import './Dashboard.css';
@@ -156,8 +157,8 @@ class Dashboard extends React.Component<IDashboardProps, IDashboardState> {
   render() {
     return (
       <>
+        <SimpleAppBar />
         <div style={{ padding: 50 }}>
-          <h1> Weather Api</h1>
           <form onSubmit={this.onSubmit}>
             <TextField
               label="Enter a city"
